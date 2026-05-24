@@ -44,6 +44,7 @@ jobs:
           mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 
           cp mac/Info.plist "$APP/Contents/"
+          cp mac/AppIcon.icns "$APP/Contents/Resources/"
           cp /tmp/pob2 "$APP/Contents/MacOS/pob2"
 
           # Lua source dirs from pob
