@@ -1,0 +1,16 @@
+name: Build launcher
+on:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile launcher.c
+        run: |
+          clang -O2 launcher.c -o pob2 \
+            -L. -lSimpleGraphic \
+            -Wl,-rpath,@executable_path \
+            -Wl,-rpath,@executable_path/../Resources
+          file pob2
