@@ -19,7 +19,7 @@ jobs:
                 extract: true
                 out-file-path: .
             - name: Delete .tar file
-              run: rm SimpleGraphicDylibs-arm64-osx.tar
+              run: rm -f SimpleGraphicDylibs-arm64-osx.tar
             - name: Create Pull Request
               uses: peter-evans/create-pull-request@v5
               with:
