@@ -4,16 +4,17 @@ Native macOS arm64 distribution for [Path of Building 2](https://github.com/Path
 
 ## Install
 
-```sh
-brew tap nelkonandparker/pob2
-brew install --cask path-of-building-2
-```
+1. Download `PathOfBuilding-PoE2-macos-arm64.tar.gz` (will appear shortly once CI completes)
+2. Extract → `Path of Building 2.app`
+3. Drag to `/Applications`
+4. First launch: `xattr -dr com.apple.quarantine '/Applications/Path of Building 2.app'` (one-time, adhoc-signed app)
+5. Double-click
 
-### Why brew tap?
+### What's with xattr?
 
-Homebrew casks auto-strip macOS's quarantine flag, which sidesteps Apple's signing/notarization requirement. The `tap` step is only there because this isn't in the official cask repo yet.
+The two most common methods of mac app distributions are to sign via Apple (paid - $99/yr), or homebrew. Homebrew also does the above, but they won't accept any old app.
 
-If this repo picks up enough traction, I'll raise a PR against homebrew, or go down the Apple route
+For now the above method effectively tells your system that you trust the App. I'm working on a homebrew tap alternative, or if things work out will raise a PR to the main homebrew. (or even pay Apple)
 
 
 ## Any issues?
@@ -23,4 +24,4 @@ No auto-updates for now
 
 ## What's going on in this repo?
 
-Nearly everything in here are the pre-compiled libs from [PathOfBuilding-SimpleGraphic](https://github.com/PathOfBuildingCommunity/PathOfBuilding-SimpleGraphic). The remainder is the typical scaffolding required to build a Mac Application.
+Nearly everything in here are the pre-compiled libs from my macOS fork of [PathOfBuilding-SimpleGraphic](https://github.com/nelkonandparker/PathOfBuilding-SimpleGraphic). The remainder is the typical scaffolding required to build a Mac Application.
