@@ -95,3 +95,12 @@ jobs:
           gh release upload "$TAG" \
             PathOfBuilding-PoE2-macos-arm64.tar.gz \
             --clobber -R "${{ github.repository }}"
+
+      - name: Notify homebrew-pob2 to bump cask
+        if: github.event_name == 'release'
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.MACOS_DISPATCH_PAT }}
+          repository: ${{ github.repository_owner }}/homebrew-pob2
+          event-type: bump-pob2-cask
+          client-payload: '{"tag": "${{ github.event.release.tag_name }}"}'
