@@ -10,6 +10,10 @@ Native macOS arm64 distribution for [Path of Building 2](https://github.com/Path
 4. First launch: `xattr -dr com.apple.quarantine '/Applications/Path of Building 2.app'` (one-time, adhoc-signed app)
 5. Double-click
 
+### Why the xattr dance?
+
+macOS slaps a quarantine flag on anything downloaded via a browser, and won't open it without a paid Apple Developer ID signature ($99/yr). The `xattr` line strips the flag so the app can launch. One-time per download — brew tap will make this go away once it's set up.
+
 
 ## Any issues?
 
