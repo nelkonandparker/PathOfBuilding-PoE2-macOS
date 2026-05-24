@@ -1,0 +1,96 @@
+name: Bundle macOS .app
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release tag to upload to'
+        required: true
+        default: 'v0.x.x'
+
+permissions:
+  contents: write
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  bundle:
+    runs-on: macos-14
+    steps:
+      - name: Checkout this repo (mac binaries + launcher)
+        uses: actions/checkout@v4
+        with:
+          path: mac
+
+      - name: Checkout pob (Lua source)
+        uses: actions/checkout@v4
+        with:
+          repository: nelkonandparker/PathOfBuilding-PoE2
+          ref: dev
+          path: pob
+
+      - name: Build launcher
+        run: |
+          clang -O2 mac/launcher.c -o /tmp/pob2 \
+            -Lmac -lSimpleGraphic \
+            -Wl,-rpath,@executable_path \
+            -Wl,-rpath,@executable_path/../Resources
+
+      - name: Assemble .app bundle
+        run: |
+          APP="Path of Building 2.app"
+          mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
+
+          cp mac/Info.plist "$APP/Contents/"
+          cp /tmp/pob2 "$APP/Contents/MacOS/pob2"
+
+          # Lua source dirs from pob
+          for d in Assets Classes Data Export Modules TreeData; do
+            cp -R "pob/src/$d" "$APP/Contents/Resources/$d"
+          done
+
+          # Root Lua scripts (real copies — engine chdir uses resolved path)
+          cp pob/src/*.lua "$APP/Contents/Resources/"
+
+          # Runtime helpers from pob/runtime/
+          cp -R pob/runtime/lua            "$APP/Contents/Resources/lua"
+          cp -R pob/runtime/SimpleGraphic  "$APP/Contents/Resources/SimpleGraphic"
+
+          # Dylibs from this repo
+          for f in mac/libSimpleGraphic.dylib \
+                   mac/liblibEGL_angle.dylib \
+                   mac/liblibGLESv2_angle.dylib \
+                   mac/liblcurl.dylib \
+                   mac/liblua-utf8.dylib \
+                   mac/liblzip.dylib \
+                   mac/libsocket.dylib; do
+            cp "$f" "$APP/Contents/Resources/"
+          done
+
+          # Sibling symlinks (preserve)
+          for s in mac/lcurl.so \
+                   mac/lua-utf8.so \
+                   mac/lzip.so \
+                   mac/socket.so \
+                   mac/libEGL.dylib \
+                   mac/libGLESv2.dylib; do
+            cp -P "$s" "$APP/Contents/Resources/"
+          done
+
+      - name: Adhoc-sign .app bundle
+        run: codesign --force --deep --sign - "Path of Building 2.app"
+
+      - name: Create archive
+        run: |
+          DIST="PathOfBuilding-PoE2-macos-arm64"
+          tar -czf "$DIST.tar.gz" "Path of Building 2.app"
+          ls -la "$DIST.tar.gz"
+
+      - name: Upload to release
+        run: |
+          TAG="${{ github.event.release.tag_name || github.event.inputs.tag_name }}"
+          gh release upload "$TAG" \
+            PathOfBuilding-PoE2-macos-arm64.tar.gz \
+            --clobber -R "${{ github.repository }}"
