@@ -2,6 +2,9 @@ name: Update SimpleGraphic dylibs
 on:
     repository_dispatch:
         types: [update-simple-graphic-macos]
+permissions:
+    contents: write
+    pull-requests: write
 jobs:
     update:
         runs-on: ubuntu-latest
