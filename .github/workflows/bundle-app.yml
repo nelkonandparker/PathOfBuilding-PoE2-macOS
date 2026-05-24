@@ -27,7 +27,7 @@ jobs:
       - name: Checkout pob (Lua source)
         uses: actions/checkout@v4
         with:
-          repository: nelkonandparker/PathOfBuilding-PoE2
+          repository: PathOfBuildingCommunity/PathOfBuilding-PoE2
           ref: dev
           path: pob
 
