@@ -1,0 +1,31 @@
+name: Update SimpleGraphic dylibs
+on:
+    repository_dispatch:
+        types: [update-simple-graphic-macos]
+jobs:
+    update:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                ref: 'main'
+            - name: Download dylibs
+              uses: robinraju/release-downloader@v1
+              with:
+                repository: ${{ github.repository_owner }}/PathOfBuilding-SimpleGraphic
+                tag: ${{ github.event.client_payload.tag }}
+                fileName: SimpleGraphicDylibs-arm64-osx.tar
+                extract: true
+                out-file-path: .
+            - name: Delete .tar file
+              run: rm SimpleGraphicDylibs-arm64-osx.tar
+            - name: Create Pull Request
+              uses: peter-evans/create-pull-request@v5
+              with:
+                title: Update dylibs to SimpleGraphic ${{ github.event.client_payload.tag }}
+                branch: simple-graphic-${{ github.event.client_payload.tag }}
+                base: main
+                body: |
+                    Update dylibs to SimpleGraphic-${{ github.event.client_payload.tag }} from ${{ github.event.client_payload.release_link }}
+                commit-message: Update dylibs to SimpleGraphic-${{ github.event.client_payload.tag }}
