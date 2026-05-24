@@ -23,4 +23,4 @@ No auto-updates for now
 
 ## What's going on in this repo?
 
-Nearly everything in here are the pre-compiled libs from [PathOfBuilding-SimpleGraphic](https://github.com/PathOfBuildingCommunity/PathOfBuilding-SimpleGraphic). The remainder is the typical scaffolding required to build a Mac Application.
+Nearly everything in here are the pre-compiled libs from my macOS fork of [PathOfBuilding-SimpleGraphic](https://github.com/nelkonandparker/PathOfBuilding-SimpleGraphic). The remainder is the typical scaffolding required to build a Mac Application.
