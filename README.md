@@ -4,16 +4,11 @@ Native macOS arm64 distribution for [Path of Building 2](https://github.com/Path
 
 ## Install
 
-```sh
-brew tap nelkonandparker/pob2
-brew install --cask path-of-building-2
-```
-
-### Why brew tap?
-
-Homebrew casks auto-strip macOS's quarantine flag, which sidesteps Apple's signing/notarization requirement. The `tap` step is only there because this isn't in the official cask repo yet.
-
-If this repo picks up enough traction, I'll raise a PR against homebrew, or go down the Apple route
+1. Download `PathOfBuilding-PoE2-macos-arm64.tar.gz` (will appear shortly once CI completes)
+2. Extract → `Path of Building 2.app`
+3. Drag to `/Applications`
+4. First launch: `xattr -dr com.apple.quarantine '/Applications/Path of Building 2.app'` (one-time, adhoc-signed app)
+5. Double-click
 
 
 ## Any issues?
